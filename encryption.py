@@ -5,7 +5,7 @@ class Encryption(TranspositionCipher):
     def __init__(self, key):
         super().__init__(key)
         
-    def encrypt_message(self, message) -> str:
+    def encrypt(self, message) -> str:
         message_encrypted = ""
         message_length = len(message)
         
