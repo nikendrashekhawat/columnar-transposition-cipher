@@ -1,4 +1,5 @@
 import math
+from pprint import pprint
 from TranspositionCipher import TranspositionCipher
 
 class Decryption(TranspositionCipher):
@@ -7,24 +8,81 @@ class Decryption(TranspositionCipher):
         super().__init__(key)
     
     def decrypt_message(self, message) -> str:
-        decryption = ""
+        message_decrypted = ""
         message_length = len(message)
-        columns = math.ceil(message_length/self.key)
-        full_rows = message_length % self.key
-        for i in range(columns):
-            if i != (columns - 1):
-                while i <= message_length:
-                    if i >= columns * (full_rows + 1):
-                        decryption += message[i-1]
-                        i = i - 1
+        
+        if isinstance(self.key, str):
+            rows = TranspositionCipher.get_columns(self)
+            sorted_rows = sorted(rows)
+            ncols = math.ceil(message_length/self.key_length)
+            sorted_key_dict = {}
+            nlast = (ncols * self.key_length) - message_length
+            last_rows = rows[-nlast:]
+            message_key_dict = {}
+            temp = 0
+            
+            for i in range(self.key_length):
+                if sorted_rows[i] not in last_rows:
+                    sorted_key_dict.update({sorted_rows[i]: message[temp: temp+ncols]})
+                    temp = temp + ncols
+                else:
+                    sorted_key_dict.update({sorted_rows[i]: message[temp: temp+ncols-1]})
+                    temp = temp + ncols - 1   
+            
+            for char in rows:
+                message_key_dict.update({char: sorted_key_dict[char]})
+            
+            for i in range(ncols):
+                for k, v in message_key_dict.items():
+                    if i < ncols-1:
+                        message_decrypted += v[i]
                     else:
-                        decryption += message[i]
-                    i += columns
-            else:
-                while i <= message_length and i < columns * full_rows:
-                    decryption += message[i]
-                    i += columns
-        return decryption
+                        if k not in last_rows:
+                            message_decrypted += v[i]              
+            del temp, i, char, k, v, sorted_key_dict, message_key_dict, message
+            del ncols, message_length, rows, sorted_rows, nlast, last_rows
+        
+        if isinstance(self.key, int):
+            columns = math.ceil(message_length/self.key)
+            full_rows = message_length % self.key
+            
+            for i in range(columns):
+                if i != (columns - 1):
+                    while i <= message_length:
+                        if i >= columns * (full_rows + 1):
+                            message_decrypted += message[i-1]
+                        else:
+                            message_decrypted += message[i]
+                        i += columns
+                else:
+                    while i <= message_length and i < columns * full_rows:
+                        message_decrypted += message[i]
+                        i += columns
+            del columns, full_rows, i, message, message_length
+
+            
+        return message_decrypted
+    
+    
+    # def decrypt_message(self, message) -> str:
+    #     decryption = ""
+    #     message_length = len(message)
+    #     columns = math.ceil(message_length/self.key)
+    #     full_rows = message_length % self.key
+        
+    #     for i in range(columns):
+    #         if i != (columns - 1):
+    #             while i <= message_length:
+    #                 if i >= columns * (full_rows + 1):
+    #                     decryption += message[i-1]
+    #                 else:
+    #                     decryption += message[i]
+    #                 i += columns
+    #         else:
+    #             while i <= message_length and i < columns * full_rows:
+    #                 decryption += message[i]
+    #                 i += columns
+    #     return decryption
 
 if __name__ == "__main__":
     key_str = input("Enter the Transposition Cipher key: ")
