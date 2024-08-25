@@ -4,16 +4,40 @@ class Encryption(TranspositionCipher):
     
     def __init__(self, key):
         super().__init__(key)
-    
+        
     def encrypt_message(self, message) -> str:
-        encrypt_message = ""
+        message_encrypted = ""
         message_length = len(message)
-        for i in range(self.key):
-            while i < message_length:
-                encrypt_message += message[i]
-                i += self.key
-        return encrypt_message
+        
+        if isinstance(self.key, str):
+            columns = TranspositionCipher.get_columns(self)
+            message_dict = {}
+            
+            for i in range(self.key_length):
+                temp = ""
+                j = i
+                while j < message_length:
+                    temp += message[j]
+                    j += self.key_length
+                    
+                message_dict.update({columns[i] : temp})
 
+            sorted_dict = dict(sorted(message_dict.items()))
+            
+            for _, value in sorted_dict.items():
+                message_encrypted += value
+
+            del temp, i, j, value, sorted_dict, message_dict, message, message_length 
+            
+        if isinstance(self.key, int):
+            for i in range(self.key):
+                while i < message_length:
+                    message_encrypted += message[i]
+                    i += self.key
+            del i, message, message_length
+        
+        return message_encrypted
+    
 if __name__ == "__main__":
     try:
         key_str = input("Enter the Transposition Cipher key: ")
