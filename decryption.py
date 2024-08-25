@@ -7,7 +7,7 @@ class Decryption(TranspositionCipher):
     def __init__(self, key):
         super().__init__(key)
     
-    def decrypt_message(self, message) -> str:
+    def decrypt(self, message) -> str:
         message_decrypted = ""
         message_length = len(message)
         
@@ -39,8 +39,8 @@ class Decryption(TranspositionCipher):
                     else:
                         if k not in last_rows:
                             message_decrypted += v[i]              
-            del temp, i, char, k, v, sorted_key_dict, message_key_dict, message
-            del ncols, message_length, rows, sorted_rows, nlast, last_rows
+            del temp, i, char, k, v, ncols, sorted_key_dict, message_key_dict
+            del message, message_length, rows, sorted_rows, nlast, last_rows
         
         if isinstance(self.key, int):
             columns = math.ceil(message_length/self.key)
@@ -60,7 +60,6 @@ class Decryption(TranspositionCipher):
                         i += columns
             del columns, full_rows, i, message, message_length
 
-            
         return message_decrypted
     
     
