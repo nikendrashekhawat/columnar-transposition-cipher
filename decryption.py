@@ -7,19 +7,19 @@ class Decryption(TranspositionCipher):
     def __init__(self, key):
         super().__init__(key)
     
-    def decrypt(self, message) -> str:
-        message_decrypted = ""
-        message_length = len(message)
+    def decrypt(self, message: str) -> str:
+        message_decrypted: str = ""
+        message_length: int = len(message)
         
         if isinstance(self.key, str):
-            rows = TranspositionCipher.get_columns(self)
-            sorted_rows = sorted(rows)
-            ncols = math.ceil(message_length/self.key_length)
-            sorted_key_dict = {}
-            nlast = (ncols * self.key_length) - message_length
-            last_rows = rows[-nlast:]
-            message_key_dict = {}
-            temp = 0
+            rows: list[str] = TranspositionCipher.get_columns(self)
+            sorted_rows: list[str] = sorted(rows)
+            ncols: int = math.ceil(message_length/self.key_length)
+            sorted_key_dict: dict[str, str] = {}
+            nempty: int = (ncols * self.key_length) - message_length
+            last_rows: list[str] = rows[-nempty:]
+            message_key_dict: dict[str, str] = {}
+            temp: int = 0
             
             for i in range(self.key_length):
                 if sorted_rows[i] not in last_rows:
@@ -40,25 +40,25 @@ class Decryption(TranspositionCipher):
                         if k not in last_rows:
                             message_decrypted += v[i]              
             del temp, i, char, k, v, ncols, sorted_key_dict, message_key_dict
-            del message, message_length, rows, sorted_rows, nlast, last_rows
+            del message, message_length, rows, sorted_rows, nempty, last_rows
         
         if isinstance(self.key, int):
-            columns = math.ceil(message_length/self.key)
-            full_rows = message_length % self.key
+            ncols: int = math.ceil(message_length/self.key)
+            full_rows: int = message_length % self.key
             
-            for i in range(columns):
-                if i != (columns - 1):
+            for i in range(ncols):
+                if i != (ncols - 1):
                     while i <= message_length:
-                        if i >= columns * (full_rows + 1):
+                        if i >= ncols * (full_rows + 1):
                             message_decrypted += message[i-1]
                         else:
                             message_decrypted += message[i]
-                        i += columns
+                        i += ncols
                 else:
-                    while i <= message_length and i < columns * full_rows:
+                    while i <= message_length and i < ncols * full_rows:
                         message_decrypted += message[i]
-                        i += columns
-            del columns, full_rows, i, message, message_length
+                        i += ncols
+            del ncols, full_rows, i, message, message_length
 
         return message_decrypted
 

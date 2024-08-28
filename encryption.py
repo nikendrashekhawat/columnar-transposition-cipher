@@ -5,16 +5,16 @@ class Encryption(TranspositionCipher):
     def __init__(self, key):
         super().__init__(key)
         
-    def encrypt(self, message) -> str:
-        message_encrypted = ""
-        message_length = len(message)
+    def encrypt(self, message: str) -> str:
+        message_encrypted: str = ""
+        message_length: int = len(message)
         
         if isinstance(self.key, str):
             columns = TranspositionCipher.get_columns(self)
-            message_dict = {}
+            message_dict: dict[str, str] = {}
             
             for i in range(self.key_length):
-                temp = ""
+                temp: str= ""
                 j = i
                 while j < message_length:
                     temp += message[j]
@@ -22,7 +22,7 @@ class Encryption(TranspositionCipher):
                     
                 message_dict.update({columns[i] : temp})
 
-            sorted_dict = dict(sorted(message_dict.items()))
+            sorted_dict: dict[str, str] = dict(sorted(message_dict.items()))
             
             for _, value in sorted_dict.items():
                 message_encrypted += value
