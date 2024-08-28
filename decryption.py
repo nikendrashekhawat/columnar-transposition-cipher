@@ -61,27 +61,7 @@ class Decryption(TranspositionCipher):
             del columns, full_rows, i, message, message_length
 
         return message_decrypted
-    
-    
-    # def decrypt_message(self, message) -> str:
-    #     decryption = ""
-    #     message_length = len(message)
-    #     columns = math.ceil(message_length/self.key)
-    #     full_rows = message_length % self.key
-        
-    #     for i in range(columns):
-    #         if i != (columns - 1):
-    #             while i <= message_length:
-    #                 if i >= columns * (full_rows + 1):
-    #                     decryption += message[i-1]
-    #                 else:
-    #                     decryption += message[i]
-    #                 i += columns
-    #         else:
-    #             while i <= message_length and i < columns * full_rows:
-    #                 decryption += message[i]
-    #                 i += columns
-    #     return decryption
+
 
 if __name__ == "__main__":
     key_str = input("Enter the Transposition Cipher key: ")
