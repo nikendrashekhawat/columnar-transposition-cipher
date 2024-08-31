@@ -1,11 +1,8 @@
 class TranspositionCipher(object): 
     
-    def __init__(self, key: str | int):
-        if isinstance(key, str):
+    def __init__(self, key: str):
             self.key: str = key
             self.key_length: int = len(key)
-        if isinstance(key, int):
-            self.key: int = key
      
     @staticmethod       
     def get_columns(self) -> list:
